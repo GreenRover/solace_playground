@@ -1,6 +1,7 @@
 package ch.sbb.solace.demo;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 import com.solacesystems.jcsmp.DeliveryMode;
@@ -8,22 +9,21 @@ import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPSession;
 import com.solacesystems.jcsmp.JCSMPStreamingPublishCorrelatingEventHandler;
-import com.solacesystems.jcsmp.JCSMPStreamingPublishEventHandler;
-import com.solacesystems.jcsmp.Queue;
 import com.solacesystems.jcsmp.TextMessage;
+import com.solacesystems.jcsmp.Topic;
 import com.solacesystems.jcsmp.XMLMessageProducer;
 
-public class PeriodicPublisher {
+public class PeriodicPublisherTopic {
 
 	final int count = 5;
 	final CountDownLatch latch = new CountDownLatch(count); // used for synchronizing b/w threads
 
 	public static void main(String[] args) throws JCSMPException {
-		new PeriodicPublisher();
+		new PeriodicPublisherTopic();
 	}
 
-	public PeriodicPublisher() throws JCSMPException {
-		final String queueName = "test/queue";
+	public PeriodicPublisherTopic() throws JCSMPException {
+		final String queueName = "demo";
 
 		System.out.println("HelloWorldPub initializing... using: " + Charset.defaultCharset().displayName());
 
@@ -33,7 +33,7 @@ public class PeriodicPublisher {
 		/** Correlating event handler */
 //        final XMLMessageProducer prod = session.getMessageProducer(new PubCallback());
 
-		final Queue queue = JCSMPFactory.onlyInstance().createQueue(queueName);
+		final Topic queue = JCSMPFactory.onlyInstance().createTopic(queueName);
 
 		/** Anonymous inner-class for handling publishing events */
 		final XMLMessageProducer prod = session.getMessageProducer(new JCSMPStreamingPublishCorrelatingEventHandler() {
@@ -57,22 +57,26 @@ public class PeriodicPublisher {
 		});
 
 		// Publish-only session is now hooked up and running!
+		
+		char[] chars = new char[1000000];
+		// Optional step - unnecessary if you're happy with the array being full of \0
+		Arrays.fill(chars, 'f');
+		final String bigData = new String(chars);
 
 		new Thread(() -> {
 			for (int i = 0; i < 9999; i++) {
 				TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
-				final String text = "Hello wörld! " + i;
+				final String text = i + "                          "  + bigData + "Hello wörld! " + i;
 //				msg.setHTTPContentEncoding("ISO-8859-1");
 				msg.setText(text);
 				msg.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 				msg.setCorrelationKey(Integer.valueOf(i));
-				msg.setTimeToLive(20);
 
 				try {
 					prod.send(msg, queue);
-					System.out.println("Message \"" + text + "\" sent. With id: " + i); // msg.getMessageId()
-					Thread.sleep(1000);
-				} catch (JCSMPException | InterruptedException e1) {
+					System.out.println(i + " Msg: \"" + text.length() + "\" sent."); // msg.getMessageId()
+//					Thread.sleep(1000);
+				} catch (JCSMPException e1) {
 					System.out.println("Unable to send msg: " + e1.getMessage());
 				}
 			}

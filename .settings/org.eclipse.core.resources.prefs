@@ -1,2 +1,3 @@
 eclipse.preferences.version=1
-encoding//src/ch/sbb/solace/demo/PeriodicPublisher.java=UTF-8
+encoding//src/ch/sbb/solace/demo/PeriodicPublisherQueue.java=UTF-8
+encoding//src/ch/sbb/solace/demo/PeriodicPublisherTopic.java=UTF-8
