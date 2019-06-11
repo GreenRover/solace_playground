@@ -8,7 +8,6 @@ import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPSession;
 import com.solacesystems.jcsmp.JCSMPStreamingPublishCorrelatingEventHandler;
-import com.solacesystems.jcsmp.JCSMPStreamingPublishEventHandler;
 import com.solacesystems.jcsmp.Queue;
 import com.solacesystems.jcsmp.TextMessage;
 import com.solacesystems.jcsmp.XMLMessageProducer;
@@ -64,9 +63,9 @@ public class PeriodicPublisherQueue {
 				final String text = "Hello wörld! " + i;
 //				msg.setHTTPContentEncoding("ISO-8859-1");
 				msg.setText(text);
-				msg.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+				msg.setDeliveryMode(DeliveryMode.PERSISTENT);
 				msg.setCorrelationKey(Integer.valueOf(i));
-				msg.setTimeToLive(20);
+				msg.setTimeToLive(20 * 1000);
 
 				try {
 					prod.send(msg, queue);
