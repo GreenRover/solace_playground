@@ -1,5 +1,6 @@
 package ch.sbb.solace.demo.msgsize;
 
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -69,7 +70,14 @@ public class TopicSubscriber {
 	private static void processTextMessage(TextMessage msg, int count) {
 		String countInfo = calcCountInfo(count);
 		int msgLength = msg.getText().length();
-		System.out.printf("%s TextMessage received: %s | %d bytes %n", countInfo, extractMessageInfo(msg), msgLength);
+		
+		System.out.printf("Elapse Time: %5s| %s TextMessage received: %s | %d bytes %n", getTimeWhenSent(msg), countInfo,
+				extractMessageInfo(msg), msgLength);
+	}
+
+	private static String getTimeWhenSent(TextMessage msg) {
+		long elapseTime = Calendar.getInstance().getTimeInMillis() - Long.parseLong(msg.getText().split(" ")[0]);
+		return String.valueOf(elapseTime);
 	}
 
 	private static String extractMessageInfo(TextMessage msg) {

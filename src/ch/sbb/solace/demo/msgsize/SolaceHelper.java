@@ -21,7 +21,7 @@ public class SolaceHelper {
 	}
 	
 	public static JCSMPProperties setupProperties() {
-		final String host = "shared-rcssolace-node01.otc-test.sbb.ch";
+		final String host = "shared-rcssolace-node02.otc-test.sbb.ch";
 		final String vpn = "pingu-VPN";
 		final String user = "default";
 		final String password = "default";

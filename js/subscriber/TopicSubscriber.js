@@ -75,8 +75,8 @@ var TopicSubscriber = function (topicName) {
         try {
             subscriber.session = solace.SolclientFactory.createSession({
                 // solace.SessionProperties
-                url:      hosturl,
-                vpnName:  vpn,
+                url: hosturl,
+                vpnName: vpn,
                 userName: username,
                 password: pass,
             });
@@ -114,21 +114,19 @@ var TopicSubscriber = function (topicName) {
         });
         // define message event listener
         subscriber.session.on(solace.SessionEventCode.MESSAGE, function (message) {
-        /*
-            subscriber.log('Received message: "' + message.getBinaryAttachment() + '", details:\n' +
-                message.dump());
-         */       
+            /*
+                subscriber.log('Received message: "' + message.getBinaryAttachment() + '", details:\n' +
+                    message.dump());
+             */
 
             // console.log( message.getBinaryAttachment().substring(1, 20));
-            let attachment  = message.getBinaryAttachment()
-            subscriber.log(message.getBinaryAttachment().substring(1, 20) + " | " +  attachment.length + " bytes");
+            let attachment = message.getBinaryAttachment();
+            let splits = attachment.split(' ');
+            let timeWhenSent = splits[0].substr(4);
+            let elapsedTime = new Date().getTime() - parseInt(timeWhenSent);
+            subscriber.log(elapsedTime + " | " + splits[1] + " " + splits[2].substr(0, 5) + " | " + attachment.length + " bytes");
         });
-
-
-       subscriber.connectToSolace();   
-
-
-
+        subscriber.connectToSolace();
     };
 
     // Actually connects the session triggered when the iframe has been loaded - see in html code
