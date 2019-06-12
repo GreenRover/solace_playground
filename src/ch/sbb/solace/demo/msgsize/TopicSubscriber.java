@@ -25,11 +25,11 @@ public class TopicSubscriber {
 		JCSMPProperties properties = SolaceHelper.setupProperties();
 
 		System.out.println("TopicSubscriber initializing...");
-		final Topic topic = JCSMPFactory.onlyInstance().createTopic(SolaceHelper.topicName);
+		final Topic topic = JCSMPFactory.onlyInstance().createTopic("msgsize/direct/json/myclass/>");
 		final JCSMPSession session = JCSMPFactory.onlyInstance().createSession(properties);
 		session.connect();
 
-		final CountDownLatch latch = new CountDownLatch(MessageConstants.SENDING_COUNT);
+		final CountDownLatch latch = new CountDownLatch(1000);
 		final XMLMessageConsumer cons = session.getMessageConsumer(new XMLMessageListener() {
 			@Override
 			public void onReceive(BytesXMLMessage msg) {
@@ -70,22 +70,23 @@ public class TopicSubscriber {
 	private static void processTextMessage(TextMessage msg, int count) {
 		String countInfo = calcCountInfo(count);
 		int msgLength = msg.getText().length();
-		
-		System.out.printf("Elapse Time: %5s| %s TextMessage received: %s | %d bytes %n", getTimeWhenSent(msg), countInfo,
-				extractMessageInfo(msg), msgLength);
+
+		System.out.printf("Elapse Time in ms: %5s| %s TextMessage received from Topic: %s | %d bytes %n", getTimeWhenSent(msg),
+				countInfo, extractMessageInfo(msg), msgLength);
 	}
 
 	private static String getTimeWhenSent(TextMessage msg) {
-		long elapseTime = Calendar.getInstance().getTimeInMillis() - Long.parseLong(msg.getText().split(" ")[0]);
+		long elapseTime = Calendar.getInstance().getTimeInMillis() - Long.parseLong(msg.getText().split(";")[0]);
 		return String.valueOf(elapseTime);
 	}
 
 	private static String extractMessageInfo(TextMessage msg) {
-		String s = msg.getText();
+		String text = msg.getText();
+		String s = text.split(";")[1];
 		if (Objects.isNull(s)) {
 			return "nix";
-		} else if (s.length() > 20) {
-			return s.substring(0, 20);
+		} else if (s.length() > 40) {
+			return s.substring(0, 40);
 		} else {
 			return String.format("%s%nMessage Dump:%n%s%n", s, msg.dump());
 		}

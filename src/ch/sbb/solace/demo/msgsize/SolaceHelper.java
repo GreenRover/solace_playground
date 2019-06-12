@@ -9,7 +9,9 @@ import com.solacesystems.jcsmp.JCSMPProperties;
 
 public class SolaceHelper {
 
-	public  static final String topicName = "msgsize/direct/json/myclass/1.0";
+	public  static final String TOPIC_MYCLASS_1_0 = "msgsize/direct/json/myclass/1.0";
+	public  static final String TOPIC_MYCLASS_2_0 = "msgsize/direct/json/myclass/2.0";
+	public  static final String TOPIC_YOURCLASS_1_0 = "msgsize/direct/json/yourclass/1.0";
 
 	public static void setupLogging(Level level) {
 		LogManager manager = LogManager.getLogManager();

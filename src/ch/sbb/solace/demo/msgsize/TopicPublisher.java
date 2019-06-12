@@ -25,7 +25,10 @@ public class TopicPublisher {
 		JCSMPProperties properties = SolaceHelper.setupProperties();
 		System.out.println("TopicPublisher initializing...");
 
-		runWithNewSession(properties, SolaceHelper.topicName, MessageConstants.DataType.K100_TextMessage);
+		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
+		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0, MessageConstants.DataType.K10_TextMessage);
+		runWithNewSession(properties, SolaceHelper.TOPIC_YOURCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
+		
 		System.out.println("DONE");
 	}
 
@@ -49,7 +52,7 @@ public class TopicPublisher {
 			});
 
 			for (int i = 1; i <= MessageConstants.SENDING_COUNT; i++) {
-				TextMessage msg = createMessage(dataType, i);
+				TextMessage msg = createMessage(dataType, i, topic.getName());
 				prod.send(msg, topic);
 				System.out.println(calcCountInfo(i) + "MessageId-" + i + " sent");
 			}
@@ -59,14 +62,15 @@ public class TopicPublisher {
 		}
 	}
 
-	private static TextMessage createMessage(MessageConstants.DataType dataType, int id) throws IOException {
-		return createTextMessage(id, dataType);
+	private static TextMessage createMessage(MessageConstants.DataType dataType, int id, String topicName) throws IOException {
+		return createTextMessage(id, dataType, topicName);
 
 	}
 
-	private static TextMessage createTextMessage(int i, MessageConstants.DataType dataType) {
+	private static TextMessage createTextMessage(int i, MessageConstants.DataType dataType, String topicName) {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(Calendar.getInstance().getTimeInMillis() + " ");
+		stringBuilder.append(Calendar.getInstance().getTimeInMillis() + ";");
+		stringBuilder.append(topicName).append(" | ");
 		switch (dataType) {
 		case K1_TextMessage:
 			stringBuilder.append(String.format("%d %s!", i, MESSAGE_K1));

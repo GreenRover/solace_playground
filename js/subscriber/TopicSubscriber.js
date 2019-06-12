@@ -121,10 +121,10 @@ var TopicSubscriber = function (topicName) {
 
             // console.log( message.getBinaryAttachment().substring(1, 20));
             let attachment = message.getBinaryAttachment();
-            let splits = attachment.split(' ');
+            let splits = attachment.split(';');
             let timeWhenSent = splits[0].substr(4);
             let elapsedTime = new Date().getTime() - parseInt(timeWhenSent);
-            subscriber.log(elapsedTime + " | " + splits[1] + " " + splits[2].substr(0, 5) + " | " + attachment.length + " bytes");
+            subscriber.log("Elapsed Time in ms: " + elapsedTime + " | " + splits[1].substr(0, 40) + " | " + attachment.length + " bytes");
         });
         subscriber.connectToSolace();
     };
