@@ -15,19 +15,14 @@ import com.solacesystems.jcsmp.XMLMessageProducer;
 
 public class TopicPublisher {
 
-	private static String MESSAGE_K1 = createStringOfSize(1000);
-	private static String MESSAGE_K10 = createStringOfSize(10_000);
-	private static String MESSAGE_K100 = createStringOfSize(100_000);
-	private static String MESSAGE_K1000 = createStringOfSize(1_000_000);
-
 	public static void main(String... args) throws JCSMPException, InterruptedException, IOException {
 		SolaceHelper.setupLogging(Level.WARNING);
 		JCSMPProperties properties = SolaceHelper.setupProperties();
 		System.out.println("TopicPublisher initializing...");
 
-		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
-		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0, MessageConstants.DataType.K10_TextMessage);
-		runWithNewSession(properties, SolaceHelper.TOPIC_YOURCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
+		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_1_0, MessageConstants.DataType.K10_TextMessage);
+//		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0, MessageConstants.DataType.K10_TextMessage);
+//		runWithNewSession(properties, SolaceHelper.TOPIC_YOURCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
 		
 		System.out.println("DONE");
 	}
@@ -73,16 +68,16 @@ public class TopicPublisher {
 		stringBuilder.append(topicName).append(" | ");
 		switch (dataType) {
 		case K1_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MESSAGE_K1));
+			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K1));
 			break;
 		case K10_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MESSAGE_K10));
+			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K10));
 			break;
 		case K100_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MESSAGE_K100));
+			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K100));
 			break;
 		case K1000_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MESSAGE_K1000));
+			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K1000));
 			break;
 		default:
 			TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
@@ -94,13 +89,6 @@ public class TopicPublisher {
 		return msg;
 	}
 
-	private static String createStringOfSize(int n) {
-		StringBuilder outputBuffer = new StringBuilder(n);
-		for (int i = 0; i < n; i++) {
-			outputBuffer.append("x");
-		}
-		return outputBuffer.toString();
-	}
 
 	private static String calcCountInfo(int count) {
 		return String.format(" [%d of %d] ", count, MessageConstants.SENDING_COUNT);

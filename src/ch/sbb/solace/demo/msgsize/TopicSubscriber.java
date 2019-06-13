@@ -71,7 +71,7 @@ public class TopicSubscriber {
 		String countInfo = calcCountInfo(count);
 		int msgLength = msg.getText().length();
 
-		System.out.printf("Elapse Time in ms: %5s| %s TextMessage received from Topic: %s | %d bytes %n", getTimeWhenSent(msg),
+		System.out.printf("Elapse Time in ms: %5s %s TextMessage received from Topic: %s | %d bytes %n", getTimeWhenSent(msg),
 				countInfo, extractMessageInfo(msg), msgLength);
 	}
 
