@@ -1,7 +1,5 @@
 package ch.sbb.solace.demo.msgsize;
 
-import java.util.Calendar;
-import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -20,9 +18,9 @@ public class TopicSubscriber {
 
 	private static AtomicInteger messageCount = new AtomicInteger(1);
 
-	public static void main(String... args) throws JCSMPException {
+	public static void main(final String... args) throws JCSMPException {
 		SolaceHelper.setupLogging(Level.WARNING);
-		JCSMPProperties properties = SolaceHelper.setupProperties();
+		final JCSMPProperties properties = SolaceHelper.setupProperties();
 
 		System.out.println("TopicSubscriber initializing...");
 		final Topic topic = JCSMPFactory.onlyInstance().createTopic("msgsize/direct/json/myclass/>");
@@ -32,8 +30,8 @@ public class TopicSubscriber {
 		final CountDownLatch latch = new CountDownLatch(1000);
 		final XMLMessageConsumer cons = session.getMessageConsumer(new XMLMessageListener() {
 			@Override
-			public void onReceive(BytesXMLMessage msg) {
-				int receivedMessagesCount = messageCount.getAndIncrement();
+			public void onReceive(final BytesXMLMessage msg) {
+				final int receivedMessagesCount = messageCount.getAndIncrement();
 				if (msg instanceof TextMessage) {
 					processTextMessage((TextMessage) msg, receivedMessagesCount);
 				} else {
@@ -44,7 +42,7 @@ public class TopicSubscriber {
 			}
 
 			@Override
-			public void onException(JCSMPException e) {
+			public void onException(final JCSMPException e) {
 				System.out.printf("Consumer received exception: %s%n", e);
 				latch.countDown(); // unblock main thread
 			}
@@ -55,7 +53,7 @@ public class TopicSubscriber {
 
 		try {
 			latch.await(); // block until message received, and latch will flip
-		} catch (InterruptedException e) {
+		} catch (final InterruptedException e) {
 			System.out.println("I was awoken while waiting");
 		}
 		cons.close();
@@ -63,38 +61,18 @@ public class TopicSubscriber {
 		session.closeSession();
 	}
 
-	private static String calcCountInfo(int count) {
+	private static void processTextMessage(final TextMessage msg, final int count) {
+		final String payload = msg.getText();
+		MessagePayloadHelper.processPayload(payload, count);
+	}
+
+	private static void processDefaultMessage(final BytesXMLMessage msg, final int count) {
+		final String countInfo = calcCountInfo(count);
+		System.out.printf("%s Message received %n", countInfo);
+	}
+
+	private static String calcCountInfo(final int count) {
 		return String.format(" [%d of %d] ", count, MessageConstants.SENDING_COUNT);
 	}
 
-	private static void processTextMessage(TextMessage msg, int count) {
-		String countInfo = calcCountInfo(count);
-		int msgLength = msg.getText().length();
-
-		System.out.printf("Elapse Time in ms: %5s %s TextMessage received from Topic: %s | %d bytes %n", getTimeWhenSent(msg),
-				countInfo, extractMessageInfo(msg), msgLength);
-	}
-
-	private static String getTimeWhenSent(TextMessage msg) {
-		long elapseTime = Calendar.getInstance().getTimeInMillis() - Long.parseLong(msg.getText().split(";")[0]);
-		return String.valueOf(elapseTime);
-	}
-
-	private static String extractMessageInfo(TextMessage msg) {
-		String text = msg.getText();
-		String s = text.split(";")[1];
-		if (Objects.isNull(s)) {
-			return "nix";
-		} else if (s.length() > 40) {
-			return s.substring(0, 40);
-		} else {
-			return String.format("%s%nMessage Dump:%n%s%n", s, msg.dump());
-		}
-	}
-
-	private static void processDefaultMessage(BytesXMLMessage msg, int count) {
-		String countInfo = calcCountInfo(count);
-		System.out.printf("%s Message received %n", countInfo);
-		// System.out.printf("Message Dump:%n%s%n", msg.dump(20));
-	}
 }

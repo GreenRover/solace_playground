@@ -1,7 +1,6 @@
 package ch.sbb.solace.demo.msgsize;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.logging.Level;
 
 import com.solacesystems.jcsmp.JCSMPException;
@@ -20,10 +19,12 @@ public class TopicPublisher {
 		JCSMPProperties properties = SolaceHelper.setupProperties();
 		System.out.println("TopicPublisher initializing...");
 
-		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_1_0, MessageConstants.DataType.K10_TextMessage);
-//		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0, MessageConstants.DataType.K10_TextMessage);
-//		runWithNewSession(properties, SolaceHelper.TOPIC_YOURCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
-		
+		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
+		// runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0,
+		// MessageConstants.DataType.K10_TextMessage);
+		// runWithNewSession(properties, SolaceHelper.TOPIC_YOURCLASS_1_0,
+		// MessageConstants.DataType.K100_TextMessage);
+
 		System.out.println("DONE");
 	}
 
@@ -57,40 +58,18 @@ public class TopicPublisher {
 		}
 	}
 
-	private static TextMessage createMessage(MessageConstants.DataType dataType, int id, String topicName) throws IOException {
-		return createTextMessage(id, dataType, topicName);
-
+	private static TextMessage createMessage(MessageConstants.DataType dataType, int i, String topicName) {
+		final String payload = MessagePayloadHelper.createPayload(dataType, i, topicName);
+		return createTextMessage(payload);
 	}
 
-	private static TextMessage createTextMessage(int i, MessageConstants.DataType dataType, String topicName) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(Calendar.getInstance().getTimeInMillis() + ";");
-		stringBuilder.append(topicName).append(" | ");
-		switch (dataType) {
-		case K1_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K1));
-			break;
-		case K10_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K10));
-			break;
-		case K100_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K100));
-			break;
-		case K1000_TextMessage:
-			stringBuilder.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K1000));
-			break;
-		default:
-			TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
-			msg.setText("not supporetd message");
-			return msg;
-		}
+	private static TextMessage createTextMessage(String text) {
 		TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
-		msg.setText(stringBuilder.toString());
+		msg.setText(text);
 		return msg;
 	}
 
-
-	private static String calcCountInfo(int count) {
+	private static String calcCountInfo(final int count) {
 		return String.format(" [%d of %d] ", count, MessageConstants.SENDING_COUNT);
 	}
 }
