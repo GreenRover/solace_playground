@@ -27,7 +27,7 @@ public class TopicSubscriber {
 		final JCSMPSession session = JCSMPFactory.onlyInstance().createSession(properties);
 		session.connect();
 
-		final CountDownLatch latch = new CountDownLatch(1000);
+		final CountDownLatch latch = new CountDownLatch(MessageConstants.SENDING_COUNT);
 		final XMLMessageConsumer cons = session.getMessageConsumer(new XMLMessageListener() {
 			@Override
 			public void onReceive(final BytesXMLMessage msg) {

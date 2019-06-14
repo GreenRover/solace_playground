@@ -4,8 +4,22 @@ import java.util.Objects;
 
 public class MessagePayloadHelper {
 
-	public static void processPayload(final String payload, final int count)  {
-		
+	/**
+	 * Extract information from the payload. The payload has the structure:
+	 * <li>time when message is created by the publisher
+	 * <li>information (e.g. topic name)
+	 * <li>message id (number starting at 1)
+	 * <li>data (lots of x)
+	 * <li>example:
+	 * 
+	 * <pre>
+	 * 1560490790836;msgsize/direct/json/myclass/1.0 | 1 xx
+	 * </pre>
+	 * 
+	 * @param payload
+	 * @param count
+	 */
+	public static void processPayload(final String payload, final int count) {
 		final String countInfo = calcCountInfo(count);
 		final int msgLength = payload.length();
 
@@ -35,7 +49,6 @@ public class MessagePayloadHelper {
 	private static String calcCountInfo(final int count) {
 		return String.format(" [%d of %d] ", count, MessageConstants.SENDING_COUNT);
 	}
-	
 
 	public static String createPayload(final MessageConstants.DataType dataType, final int i, final String info) {
 		final StringBuilder sb = new StringBuilder();
@@ -57,6 +70,6 @@ public class MessagePayloadHelper {
 		default:
 			throw new RuntimeException("Unexpected DataType");
 		}
-		return sb.toString();	
+		return sb.toString();
 	}
 }
