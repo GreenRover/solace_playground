@@ -19,9 +19,9 @@ public class TopicPublisher {
 		JCSMPProperties properties = SolaceHelper.setupProperties();
 		System.out.println("TopicPublisher initializing...");
 
-		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_1_0, MessageConstants.DataType.K100_TextMessage);
+		runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_1_0, MessageConstants.DataType.K1000_TextMessage);
 		// runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0,
-		// MessageConstants.DataType.K10_TextMessage);
+		// MessageConstants.DataType.K1000_TextMessage);
 		// runWithNewSession(properties, SolaceHelper.TOPIC_YOURCLASS_1_0,
 		// MessageConstants.DataType.K100_TextMessage);
 
