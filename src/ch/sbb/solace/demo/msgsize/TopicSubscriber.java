@@ -14,6 +14,10 @@ import com.solacesystems.jcsmp.Topic;
 import com.solacesystems.jcsmp.XMLMessageConsumer;
 import com.solacesystems.jcsmp.XMLMessageListener;
 
+import ch.sbb.solace.demo.helper.MessageConstants;
+import ch.sbb.solace.demo.helper.MessagePayloadHelper;
+import ch.sbb.solace.demo.helper.SolaceHelper;
+
 public class TopicSubscriber {
 
 	private static AtomicInteger messageCount = new AtomicInteger(1);

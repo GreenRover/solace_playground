@@ -1,4 +1,4 @@
-package ch.sbb.solace.demo.msgsize;
+package ch.sbb.solace.demo.helper;
 
 public class MessageConstants {
 

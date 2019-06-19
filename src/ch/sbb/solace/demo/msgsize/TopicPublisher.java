@@ -12,6 +12,10 @@ import com.solacesystems.jcsmp.TextMessage;
 import com.solacesystems.jcsmp.Topic;
 import com.solacesystems.jcsmp.XMLMessageProducer;
 
+import ch.sbb.solace.demo.helper.MessageConstants;
+import ch.sbb.solace.demo.helper.MessagePayloadHelper;
+import ch.sbb.solace.demo.helper.SolaceHelper;
+
 public class TopicPublisher {
 
 	public static void main(String... args) throws JCSMPException, InterruptedException, IOException {

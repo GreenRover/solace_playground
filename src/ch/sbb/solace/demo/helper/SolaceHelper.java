@@ -1,4 +1,4 @@
-package ch.sbb.solace.demo.msgsize;
+package ch.sbb.solace.demo.helper;
 
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -16,6 +16,8 @@ public class SolaceHelper {
 	public static final String TOPIC_MYCLASS_2_0 = "msgsize/direct/json/myclass/2.0";
 	public static final String TOPIC_YOURCLASS_1_0 = "msgsize/direct/json/yourclass/1.0";
 
+	public static final String TOPIC_PEQ_REP = "reqrep/direct/json/myclass/1.0";
+
 	public static void setupLogging(Level level) {
 		LogManager manager = LogManager.getLogManager();
 		Logger rootLogger = manager.getLogger("");
@@ -26,7 +28,7 @@ public class SolaceHelper {
 	}
 
 	public static JCSMPProperties setupProperties() {
-		final String host = "shared-rcssolace-node02.otc-test.sbb.ch";
+		final String host = "shared-rcssolace-node01.otc-test.sbb.ch";
 		final String vpn = "pingu-VPN";
 		final String user = "default";
 		final String password = "default";
