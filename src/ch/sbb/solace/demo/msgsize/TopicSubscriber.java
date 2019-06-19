@@ -29,6 +29,8 @@ public class TopicSubscriber {
 		if (System.getProperty("queueName") != null) {
 			queueName = System.getProperty("queueName");
 		}
+		
+		System.out.println("subscribing: " + queueName);
 
 		System.out.println("TopicSubscriber initializing...");
 		final Topic topic = JCSMPFactory.onlyInstance().createTopic(queueName);

@@ -34,6 +34,8 @@ public class QueueSubscriber {
 			queueName = System.getProperty("queueName");
 		}
 
+		System.out.println("subscribing: " + queueName);
+		
 		final Queue queue = createQueue(session, queueName);
 
 		final CountDownLatch latch = new CountDownLatch(MessageConstants.SENDING_COUNT); // used for synchronizing b/w

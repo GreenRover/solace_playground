@@ -58,7 +58,8 @@ public class SolaceHelper {
 			MessageConstants.SENDING_COUNT = Integer.parseInt(System.getProperty("count"));
 		}
 		
-
+		System.out.println(String.format("host:%s, user:%s, vpn:%s", host, user, vpn));
+		
 		final JCSMPProperties properties = new JCSMPProperties();
 		properties.setProperty(JCSMPProperties.HOST, host); // host:port
 		properties.setProperty(JCSMPProperties.USERNAME, user); // client-username
@@ -76,7 +77,7 @@ public class SolaceHelper {
 	}
 	
 	public static JCSMPSession connect() throws JCSMPException {
-		System.out.println("TopicSubscriber initializing...");
+		System.out.println("Solace client initializing...");
 		final JCSMPSession session = JCSMPFactory.onlyInstance().createSession(setupProperties());
 		session.connect();
 		

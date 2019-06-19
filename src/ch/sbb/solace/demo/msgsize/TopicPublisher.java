@@ -31,6 +31,8 @@ public class TopicPublisher {
 		if (System.getProperty("msgSize") != null) {
 			msgSize = MessageConstants.DataType.valueOf(System.getProperty("msgSize"));
 		}
+		
+		System.out.println("sending: " + MessageConstants.SENDING_COUNT  + "msgs, with " + msgSize.name() + " to " + queueName);
 
 		runWithNewSession(session, queueName, msgSize);
 		// runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0,
