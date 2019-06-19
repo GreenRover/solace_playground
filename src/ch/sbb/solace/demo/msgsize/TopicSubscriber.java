@@ -22,7 +22,7 @@ public class TopicSubscriber {
 	private static AtomicInteger messageCount = new AtomicInteger(1);
 
 	public static void main(final String... args) throws JCSMPException {
-		SolaceHelper.setupLogging(Level.WARNING);
+		SolaceHelper.setupLogging(Level.FINE);
 		final JCSMPSession session = SolaceHelper.connect();
 		
 		String queueName = SolaceHelper.TOPIC_DEMO;

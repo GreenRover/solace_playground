@@ -1,8 +1,11 @@
 package ch.sbb.solace.demo.parallel;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 
@@ -28,6 +31,13 @@ public class ParallelTopicPublisher {
 		SolaceHelper.setupLogging(Level.WARNING);
 		final JCSMPProperties properties = SolaceHelper.setupProperties();
 		System.out.println("TopicPublisher initializing...");
+
+		NumberFormat nf = NumberFormat.getInstance();
+		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+		executorService.scheduleAtFixedRate(() -> {
+			int count = msgCount.getAndSet(0);
+			System.out.println(nf.format(count) + " msg/s");
+		}, 0, 1, TimeUnit.SECONDS);
 
 		runInParallel(properties);
 		System.out.println("DONE");
@@ -93,7 +103,6 @@ public class ParallelTopicPublisher {
 	}
 
 	private static String calcCountInfo(final int count) {
-		 return String.format(" [%d of %d] ", count,
-		 MessageConstants.SENDING_COUNT);
+		return String.format(" [%d of %d] ", count, MessageConstants.SENDING_COUNT);
 	}
 }

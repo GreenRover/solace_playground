@@ -1,5 +1,6 @@
 package ch.sbb.solace.demo.parallel;
 
+import java.text.NumberFormat;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -65,10 +66,11 @@ public class ParallelTopicSubscriber {
 		System.out.println("Connected. Awaiting message...");
 		cons.start();
 
+		NumberFormat nf = NumberFormat.getInstance();
 		ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		executorService.scheduleAtFixedRate(() -> {
 			int count = messageCount.getAndSet(0);
-			System.out.println(count + " msg/s");
+			System.out.println(nf.format(count) + " msg/s");
 		}, 0, 1, TimeUnit.SECONDS);
 
 		try {
