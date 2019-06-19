@@ -6,15 +6,20 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import com.solacesystems.jcsmp.JCSMPChannelProperties;
+import com.solacesystems.jcsmp.JCSMPException;
+import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPProperties;
+import com.solacesystems.jcsmp.JCSMPSession;
 
 public class SolaceHelper {
 
 	private static final int RECEIVE_BUFFER_SIZE = 128_000;
 	private static final int SEND_BUFFER_SIZE = 128_000;
-	public static final String TOPIC_MYCLASS_1_0 = "msgsize/direct/json/myclass/1.0";
-	public static final String TOPIC_MYCLASS_2_0 = "msgsize/direct/json/myclass/2.0";
-	public static final String TOPIC_YOURCLASS_1_0 = "msgsize/direct/json/yourclass/1.0";
+	public  static final String TOPIC_MYCLASS_1_0 = "msgsize/direct/json/myclass/1.0";
+	public  static final String TOPIC_MYCLASS_2_0 = "msgsize/direct/json/myclass/2.0";
+	public  static final String TOPIC_YOURCLASS_1_0 = "msgsize/direct/json/yourclass/1.0";
+	public  static final String TOPIC_DEMO = "demo";
+	public  static final String TOPIC_IPAD_CON = "ipad_connection_test";
 
 	public static final String TOPIC_PEQ_REP = "reqrep/direct/json/myclass/1.0";
 
@@ -28,10 +33,31 @@ public class SolaceHelper {
 	}
 
 	public static JCSMPProperties setupProperties() {
-		final String host = "shared-rcssolace-node01.otc-test.sbb.ch";
-		final String vpn = "pingu-VPN";
-		final String user = "default";
-		final String password = "default";
+		String host = "shared-rcssolace-node01.otc-test.sbb.ch"; // shared-rcssolace-node02.otc-test.sbb.ch
+		String vpn = "pingu-VPN";
+		String user = "default";
+		String password = "default";
+		
+		if (System.getProperty("host") != null) {
+			host = System.getProperty("host");
+		}
+		
+		if (System.getProperty("vpn") != null) {
+			vpn = System.getProperty("vpn");
+		}
+		
+		if (System.getProperty("user") != null) {
+			user = System.getProperty("user");
+		}
+		
+		if (System.getProperty("password") != null) {
+			password = System.getProperty("password");
+		}
+		
+		if (System.getProperty("count") != null) {
+			MessageConstants.SENDING_COUNT = Integer.parseInt(System.getProperty("count"));
+		}
+		
 
 		final JCSMPProperties properties = new JCSMPProperties();
 		properties.setProperty(JCSMPProperties.HOST, host); // host:port
@@ -43,6 +69,17 @@ public class SolaceHelper {
 				.getProperty(JCSMPProperties.CLIENT_CHANNEL_PROPERTIES);
 		channelProperties.setSendBuffer(SEND_BUFFER_SIZE);
 		channelProperties.setReceiveBuffer(RECEIVE_BUFFER_SIZE);
+		channelProperties.setConnectRetries(-1);
+		channelProperties.setReconnectRetries(-1);
+
 		return properties;
+	}
+	
+	public static JCSMPSession connect() throws JCSMPException {
+		System.out.println("TopicSubscriber initializing...");
+		final JCSMPSession session = JCSMPFactory.onlyInstance().createSession(setupProperties());
+		session.connect();
+		
+		return session;
 	}
 }

@@ -71,6 +71,13 @@ var TopicSubscriber = function (topicName) {
         subscriber.log('Connecting to Solace message router using url: ' + hosturl);
         subscriber.log('Client username: ' + username);
         subscriber.log('Solace message router VPN name: ' + vpn);
+
+        solace.SessionProperties.connectTimeoutInMsecs = 30 * 1000;
+        solace.SessionProperties.connectRetries = -1;
+        solace.SessionProperties.reconnectRetries = -1;
+        solace.SessionProperties.reconnectRetryWaitInMsecs = 10 * 1000;
+        solace.SolclientFactory.setLogLevel(solace.LogLevel.DEBUG);
+
         // create session
         try {
             subscriber.session = solace.SolclientFactory.createSession({

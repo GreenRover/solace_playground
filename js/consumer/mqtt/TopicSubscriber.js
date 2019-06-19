@@ -26,7 +26,7 @@
 /*jslint es6 browser devel:true*/
 /*global solace*/
 
-var QueueConsumer = function (queueName) {
+var TopicSubscriber = function (queueName) {
     'use strict';
     var consumer = {};
     consumer.session = null;
@@ -78,7 +78,7 @@ var QueueConsumer = function (queueName) {
                 }
             };
             consumer.session.onMessageArrived = (message) => {
-                consumer.log('Received message: ' + message.payloadString.substr(0, 10));
+                consumer.log('Received message: ' + message.payloadString.substr(37, 10));
                 // console.log(message);
                 // consumer.log('Received message: "' + message.payloadString + '"');
             };

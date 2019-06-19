@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import com.solacesystems.jcsmp.BytesXMLMessage;
 import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
-import com.solacesystems.jcsmp.JCSMPProperties;
 import com.solacesystems.jcsmp.JCSMPSession;
 import com.solacesystems.jcsmp.TextMessage;
 import com.solacesystems.jcsmp.Topic;
@@ -24,12 +23,15 @@ public class TopicSubscriber {
 
 	public static void main(final String... args) throws JCSMPException {
 		SolaceHelper.setupLogging(Level.WARNING);
-		final JCSMPProperties properties = SolaceHelper.setupProperties();
+		final JCSMPSession session = SolaceHelper.connect();
+		
+		String queueName = SolaceHelper.TOPIC_DEMO;
+		if (System.getProperty("queueName") != null) {
+			queueName = System.getProperty("queueName");
+		}
 
 		System.out.println("TopicSubscriber initializing...");
-		final Topic topic = JCSMPFactory.onlyInstance().createTopic("msgsize/direct/json/myclass/>");
-		final JCSMPSession session = JCSMPFactory.onlyInstance().createSession(properties);
-		session.connect();
+		final Topic topic = JCSMPFactory.onlyInstance().createTopic(queueName);
 
 		final CountDownLatch latch = new CountDownLatch(1000);
 		final XMLMessageConsumer cons = session.getMessageConsumer(new XMLMessageListener() {
