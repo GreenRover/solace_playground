@@ -72,4 +72,13 @@ public class MessagePayloadHelper {
 		}
 		return sb.toString();
 	}
+
+	public static String createPayload(String text, final int i, final String info) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append(System.currentTimeMillis() + ";");
+		sb.append(info).append(" | ");
+		sb.append(String.format("%d %s!", i, text));
+		return sb.toString();
+	}
+
 }
