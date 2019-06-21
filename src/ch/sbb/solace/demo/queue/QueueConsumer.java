@@ -62,9 +62,10 @@ public class QueueConsumer {
 		// Actually provision it, and do not fail if it already exists
 		session.provision(queue, endpointProps, JCSMPSession.FLAG_IGNORE_ALREADY_EXISTS);
 
-		final CountDownLatch latch = new CountDownLatch(MessageConstants.MAX_MESSAGES_IN_QUEUE+1); // used for
-																// synchronizing
-																// b/w threads
+		final CountDownLatch latch = new CountDownLatch(MessageConstants.MAX_MESSAGES_IN_QUEUE + 1); // used
+																										// for
+		// synchronizing
+		// b/w threads
 
 		System.out.printf("Attempting to bind to the queue '%s' on the appliance.%n", queueName);
 
@@ -76,6 +77,9 @@ public class QueueConsumer {
 		EndpointProperties endpoint_props = new EndpointProperties();
 		endpoint_props.setAccessType(EndpointProperties.ACCESSTYPE_EXCLUSIVE);
 
+		// With a connected session, you then need to bind to the Solace message
+		// router queue with a flow receiver. Flow receivers allow applications
+		// to receive messages from a Solace guaranteed message flow.
 		final FlowReceiver cons = session.createFlow(new XMLMessageListener() {
 			@Override
 			public void onReceive(BytesXMLMessage msg) {

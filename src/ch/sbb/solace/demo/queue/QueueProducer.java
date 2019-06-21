@@ -61,7 +61,7 @@ public class QueueProducer {
 		// Actually provision it, and do not fail if it already exists
 		session.provision(queue, endpointProps, JCSMPSession.FLAG_IGNORE_ALREADY_EXISTS);
 
-		/** Anonymous inner-class for handling publishing events */
+		//  Solace message router will acknowledge the message once it is successfully stored on the message router.
 		final XMLMessageProducer prod = session.getMessageProducer(new JCSMPStreamingPublishEventHandler() {
 			@Override
 			public void responseReceived(final String messageID) {
