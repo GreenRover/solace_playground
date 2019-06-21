@@ -6,6 +6,7 @@ public class MessageConstants {
 	public static final int MAX_PARALLEL_THREADS = 12;
 	public static final int REQUEST_TIMEOUT_IN_MILLIS = 10_000;
 	
+	public static final int MAX_MESSAGES_IN_QUEUE = 1_000;
 
 	public enum DataType {
 		K1_TextMessage, K10_TextMessage, K100_TextMessage, K1000_TextMessage

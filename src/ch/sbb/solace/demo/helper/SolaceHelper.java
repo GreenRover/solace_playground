@@ -23,6 +23,8 @@ public class SolaceHelper {
 
 	public static final String TOPIC_PEQ_REP = "reqrep/direct/json/myclass/1.0";
 
+	public static final String QUEUE_NAME = "Q/tutorial";	
+	
 	public static void setupLogging(Level level) {
 		LogManager manager = LogManager.getLogManager();
 		Logger rootLogger = manager.getLogger("");
