@@ -2,7 +2,7 @@ package ch.sbb.solace.demo.helper;
 
 public class MessageConstants {
 
-	public static  int SENDING_COUNT = 10_00_000;
+	public static  int SENDING_COUNT = 10_000;
 	public static final int MAX_PARALLEL_THREADS = 12;
 	public static final int REQUEST_TIMEOUT_IN_MILLIS = 10_000;
 	
