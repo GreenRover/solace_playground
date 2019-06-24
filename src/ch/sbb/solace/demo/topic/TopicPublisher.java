@@ -1,4 +1,4 @@
-package ch.sbb.solace.demo.msgsize;
+package ch.sbb.solace.demo.topic;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -18,7 +18,7 @@ import ch.sbb.solace.demo.helper.SolaceHelper;
 public class TopicPublisher {
 
 	public static void main(final String... args) throws JCSMPException, InterruptedException, IOException {
-		SolaceHelper.setupLogging(Level.WARNING);
+		SolaceHelper.setupLogging(Level.FINER);
 		final JCSMPSession session = SolaceHelper.connect();
 		System.out.println("TopicPublisher initializing...");
 

@@ -1,4 +1,4 @@
-package ch.sbb.solace.demo.parallel;
+package ch.sbb.solace.demo.topic.parallel;
 
 import java.util.ArrayList;
 import java.util.List;

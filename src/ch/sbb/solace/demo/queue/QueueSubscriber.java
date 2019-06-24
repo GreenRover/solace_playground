@@ -1,4 +1,4 @@
-package ch.sbb.solace.demo.msgsize;
+package ch.sbb.solace.demo.queue;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;

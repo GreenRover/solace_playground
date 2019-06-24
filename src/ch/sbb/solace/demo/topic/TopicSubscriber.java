@@ -1,4 +1,4 @@
-package ch.sbb.solace.demo.msgsize;
+package ch.sbb.solace.demo.topic;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,7 +22,7 @@ public class TopicSubscriber {
 	private static AtomicInteger messageCount = new AtomicInteger(1);
 
 	public static void main(final String... args) throws JCSMPException {
-		SolaceHelper.setupLogging(Level.FINE);
+		SolaceHelper.setupLogging(Level.WARNING);
 		final JCSMPSession session = SolaceHelper.connect();
 		
 		String queueName = SolaceHelper.TOPIC_DEMO;
@@ -35,7 +35,7 @@ public class TopicSubscriber {
 		System.out.println("TopicSubscriber initializing...");
 		final Topic topic = JCSMPFactory.onlyInstance().createTopic(queueName);
 
-		final CountDownLatch latch = new CountDownLatch(1000);
+		final CountDownLatch latch = new CountDownLatch(MessageConstants.SENDING_COUNT);
 		final XMLMessageConsumer cons = session.getMessageConsumer(new XMLMessageListener() {
 			@Override
 			public void onReceive(final BytesXMLMessage msg) {
