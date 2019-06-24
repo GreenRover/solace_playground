@@ -76,6 +76,7 @@ public class ParallelTopicPublisher {
 						final Topic topic = rand.getRandomTopic();
 						String text = rand.getRandomMessage();
 						final TextMessage msg = createMessage(rand.getRandomMessage(), i, topic.getName());
+						msg.setPriority(i%10);
 						prod.send(msg, topic);
 						msgCount.incrementAndGet();
 						if (DEBUG) {

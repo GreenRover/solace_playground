@@ -1,6 +1,8 @@
 package ch.sbb.solace.demo.parallel;
 
 import java.text.NumberFormat;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -26,7 +28,10 @@ public class ParallelTopicSubscriber {
 
 	private static AtomicInteger messageCount = new AtomicInteger(1);
 	private static boolean isDebug = false;
-
+	
+	// stats about priorities of received messages
+	private static Map<Integer, Integer> map = new ConcurrentHashMap<>();
+	
 	public static void main(final String... args) throws JCSMPException {
 		SolaceHelper.setupLogging(Level.WARNING);
 		final JCSMPProperties properties = SolaceHelper.setupProperties();
@@ -41,6 +46,8 @@ public class ParallelTopicSubscriber {
 			@Override
 			public void onReceive(final BytesXMLMessage msg) {
 				final int receivedMessagesCount = messageCount.getAndIncrement();
+				map.compute(msg.getPriority(), (k,v) -> (v == null) ? 1: v+1);
+				
 				if (isDebug) {
 					if (msg instanceof TextMessage) {
 						processTextMessage((TextMessage) msg, receivedMessagesCount);
@@ -73,6 +80,10 @@ public class ParallelTopicSubscriber {
 			System.out.println(nf.format(count) + " msg/s");
 		}, 0, 1, TimeUnit.SECONDS);
 
+		executorService.scheduleAtFixedRate(() -> {
+			System.out.printf("  message prio stats: %s%n", map);
+		}, 0, 30, TimeUnit.SECONDS);
+		
 		try {
 			latch.await(); // block until message received, and latch will flip
 		} catch (final InterruptedException e) {
