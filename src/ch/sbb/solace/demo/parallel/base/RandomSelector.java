@@ -1,27 +1,19 @@
-package ch.sbb.solace.demo.topic.parallel;
+package ch.sbb.solace.demo.parallel.base;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import com.solacesystems.jcsmp.JCSMPFactory;
-import com.solacesystems.jcsmp.Topic;
+import com.solacesystems.jcsmp.Destination;
 
 import ch.sbb.solace.demo.helper.MessageConstants;
 
-public class RandomSelector {
-	private static final int MAX_TOPICS = 1000;
-	private final Random rand = new Random();
+public abstract class RandomSelector {
 
-	private final List<Topic> topics = new ArrayList<>(MAX_TOPICS);
 	private final List<String> messages = new ArrayList<>();
+	protected final Random rand = new Random();
 
 	public RandomSelector() {
-		for (int i = 0; i < MAX_TOPICS; i++) {
-			final Topic topic = JCSMPFactory.onlyInstance().createTopic("topic/parallel/" + i);
-			topics.add(topic);
-		}
-
 		messages.add(MessageConstants.MESSAGE_B10);
 		messages.add(MessageConstants.MESSAGE_B20);
 		messages.add(MessageConstants.MESSAGE_B50);
@@ -32,14 +24,9 @@ public class RandomSelector {
 		messages.add(MessageConstants.MESSAGE_K2);
 	}
 
-	public Topic getRandomTopic() {
-		final int index = rand.nextInt(MAX_TOPICS);
-		return topics.get(index);
-	}
+	public abstract Destination getRandomDestination();
 
-	public List<Topic> getAllTopics() {
-		return new ArrayList<>(topics);
-	}
+	public abstract List<Destination> getAllDestinations();
 
 	public String getRandomMessage() {
 		final int index = rand.nextInt(messages.size());
