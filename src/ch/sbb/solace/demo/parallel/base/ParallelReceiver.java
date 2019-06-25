@@ -52,7 +52,7 @@ public abstract class ParallelReceiver {
 		executorService.scheduleAtFixedRate(() -> {
 			final int countPerSecond = messageCountPerSecond.getAndSet(0);
 			final int countTotal = messageCount.get();
-			System.out.printf("%d msg/s [%d | %d]%n", countPerSecond, countTotal, MAX_MESSAGES);
+			System.out.printf("%,d msg/s [%,d | %,d]%n", countPerSecond, countTotal, MAX_MESSAGES);
 		}, 0, 1, TimeUnit.SECONDS);
 
 		executorService.scheduleAtFixedRate(() -> {
