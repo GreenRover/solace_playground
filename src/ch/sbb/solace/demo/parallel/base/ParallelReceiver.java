@@ -1,6 +1,7 @@
 package ch.sbb.solace.demo.parallel.base;
 
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -56,10 +57,21 @@ public abstract class ParallelReceiver {
 		}, 0, 1, TimeUnit.SECONDS);
 
 		executorService.scheduleAtFixedRate(() -> {
-			System.out.printf("  message prio stats: %s%n", map);
+			System.out.printf("  message prio stats: %s%n", calculateMapStatistics(map));
 		}, 0, 30, TimeUnit.SECONDS);
 	}
 
+	private String calculateMapStatistics(Map<Integer, Integer> m) {
+		StringBuilder sb = new StringBuilder();
+		int sum = map.values().stream().mapToInt(Integer::intValue).sum();
+		for (Entry<Integer, Integer> el : m.entrySet()) {
+			int k = Integer.valueOf(el.getKey());
+			int v = Integer.valueOf(el.getValue());
+			float percent = ((float)v / sum) * 100.0f;
+			sb.append(k).append("=").append(v).append(" ").append(Math.round(percent)).append("%, ");
+		}
+		return sb.toString();
+	}
 	public abstract void configureSession(JCSMPSession session, Destination destination) throws JCSMPException;
 
 	public abstract Consumer createReceiver(JCSMPSession session, Destination destination) throws JCSMPException;

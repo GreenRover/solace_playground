@@ -5,6 +5,7 @@ import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPSession;
 import com.solacesystems.jcsmp.JCSMPStreamingPublishEventHandler;
 import com.solacesystems.jcsmp.TextMessage;
+import com.solacesystems.jcsmp.User_Cos;
 import com.solacesystems.jcsmp.XMLMessageProducer;
 
 import ch.sbb.solace.demo.helper.MessagePayloadHelper;
@@ -40,6 +41,11 @@ public class ParallelTopicPublisher extends ParallelSender {
 		final String payload = MessagePayloadHelper.createPayload(text, i, topicName);
 		final TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
 		msg.setText(payload);
+		int prio = i % 10;
+		msg.setPriority(prio);
+		if (prio > 7) {
+			msg.setCos(User_Cos.USER_COS_3);
+		}
 		return msg;
 	}
 
