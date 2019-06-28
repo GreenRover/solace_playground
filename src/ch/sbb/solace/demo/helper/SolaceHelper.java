@@ -68,6 +68,8 @@ public class SolaceHelper {
 		properties.setProperty(JCSMPProperties.VPN_NAME, vpn); // message-vpn
 		properties.setProperty(JCSMPProperties.PASSWORD, password); // client-password
 
+		properties.setProperty(JCSMPProperties.PUB_ACK_WINDOW_SIZE, 255); // extends ACK Window		
+		
 		JCSMPChannelProperties channelProperties = (JCSMPChannelProperties) properties
 				.getProperty(JCSMPProperties.CLIENT_CHANNEL_PROPERTIES);
 		channelProperties.setSendBuffer(SEND_BUFFER_SIZE);
