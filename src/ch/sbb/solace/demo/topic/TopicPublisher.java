@@ -3,6 +3,7 @@ package ch.sbb.solace.demo.topic;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import com.solacesystems.jcsmp.DeliveryMode;
 import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPSession;
@@ -31,8 +32,9 @@ public class TopicPublisher {
 		if (System.getProperty("msgSize") != null) {
 			msgSize = MessageConstants.DataType.valueOf(System.getProperty("msgSize"));
 		}
-		
-		System.out.println("sending: " + MessageConstants.SENDING_COUNT  + "msgs, with " + msgSize.name() + " to " + queueName);
+
+		System.out.println(
+				"sending: " + MessageConstants.SENDING_COUNT + "msgs, with " + msgSize.name() + " to " + queueName);
 
 		runWithNewSession(session, queueName, msgSize);
 		// runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0,
@@ -61,10 +63,10 @@ public class TopicPublisher {
 
 			for (int i = 1; i <= MessageConstants.SENDING_COUNT; i++) {
 				final TextMessage msg = createMessage(dataType, i, topic.getName());
-				// msg.setDeliveryMode(DeliveryMode.DIRECT);
-				// msg.setTimeToLive(10 * 1000);
+//				msg.setDeliveryMode(DeliveryMode.PERSISTENT);
+//				msg.setTimeToLive(10 * 1000);
 				prod.send(msg, topic);
-//				Thread.sleep(100);
+				Thread.sleep(100);
 				System.out.println(calcCountInfo(i) + "MessageId-" + i + " sent");
 			}
 			session.closeSession();

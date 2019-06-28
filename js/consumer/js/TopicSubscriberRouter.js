@@ -129,7 +129,7 @@ var TopicSubscriber = function (topicName) {
             // console.log( message.getBinaryAttachment().substring(1, 20));
             let now = Date.now()
             let attachment = message.getBinaryAttachment();
-            console.log(message)
+            console.log(arguments)
             let splits = attachment.split(';');
             let timeWhenSent = splits[0].substr(4);
             let elapsedTime = now - parseInt(timeWhenSent);

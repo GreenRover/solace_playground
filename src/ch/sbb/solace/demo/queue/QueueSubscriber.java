@@ -33,7 +33,7 @@ public class QueueSubscriber {
 		if (System.getProperty("queueName") != null) {
 			queueName = System.getProperty("queueName");
 		}
-
+		
 		System.out.println("subscribing: " + queueName);
 		
 		final Queue queue = createQueue(session, queueName);
@@ -45,7 +45,7 @@ public class QueueSubscriber {
 		// Create a Flow be able to bind to and consume messages from the Queue.
 		final ConsumerFlowProperties flow_prop = new ConsumerFlowProperties();
 		flow_prop.setEndpoint(queue);
-		flow_prop.setAckMode(JCSMPProperties.SUPPORTED_MESSAGE_ACK_CLIENT);
+		flow_prop.setAckMode(JCSMPProperties.SUPPORTED_MESSAGE_ACK_AUTO);
 
 		final EndpointProperties endpoint_props = new EndpointProperties();
 		endpoint_props.setAccessType(EndpointProperties.ACCESSTYPE_EXCLUSIVE);

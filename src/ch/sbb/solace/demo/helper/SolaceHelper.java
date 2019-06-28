@@ -65,8 +65,11 @@ public class SolaceHelper {
 		final JCSMPProperties properties = new JCSMPProperties();
 		properties.setProperty(JCSMPProperties.HOST, host); // host:port
 		properties.setProperty(JCSMPProperties.USERNAME, user); // client-username
-		properties.setProperty(JCSMPProperties.VPN_NAME, vpn); // message-vpn
 		properties.setProperty(JCSMPProperties.PASSWORD, password); // client-password
+		properties.setProperty(JCSMPProperties.VPN_NAME, vpn); // message-vpn
+		properties.setProperty(JCSMPProperties.REAPPLY_SUBSCRIPTIONS, true);
+		properties.setProperty(JCSMPProperties.SUB_ACK_WINDOW_SIZE, 255); // Default: 255
+		properties.setProperty(JCSMPProperties.PUB_ACK_WINDOW_SIZE, 255); // Default:   1 for Java else 255
 
 		properties.setProperty(JCSMPProperties.PUB_ACK_WINDOW_SIZE, 255); // extends ACK Window		
 		
