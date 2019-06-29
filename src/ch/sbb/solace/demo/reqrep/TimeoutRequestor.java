@@ -79,7 +79,7 @@ public class TimeoutRequestor {
 		final Topic topic = JCSMPFactory.onlyInstance().createTopic(SolaceHelper.TOPIC_PEQ_REP);
 		final int timeoutMs = MessageConstants.REQUEST_TIMEOUT_IN_MILLIS;
 
-		final ExecutorService executor = Executors.newFixedThreadPool(MessageConstants.MAX_PARALLEL_THREADS);
+		final ExecutorService executor = Executors.newFixedThreadPool(MessageConstants.PARALLEL_THREADS);
 		for (int i = 0; i < 10; i++) {
 			executor.submit(run(session, topic, timeoutMs));
 		}

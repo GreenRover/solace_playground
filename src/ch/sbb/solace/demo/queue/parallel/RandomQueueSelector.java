@@ -10,13 +10,12 @@ import com.solacesystems.jcsmp.Queue;
 import ch.sbb.solace.demo.parallel.base.RandomSelector;
 
 public class RandomQueueSelector extends RandomSelector {
-	private static final int MAX_QUEUES = 50;
-	
-	private final List<Destination> queues = new ArrayList<>(MAX_QUEUES);
+	private final List<Destination> queues = new ArrayList<>(100);
 
-	public RandomQueueSelector() {
-		super();
-		for (int i = 0; i < MAX_QUEUES; i++) {
+	public RandomQueueSelector(final int minQueue, final int maxQueue) {
+		super(minQueue, maxQueue);
+		
+		for (int i = minQueue; i <= maxQueue; i++) {
 			final Queue queue = JCSMPFactory.onlyInstance().createQueue("queue/parallel/" + i);
 			queues.add(queue);
 		}
@@ -24,8 +23,7 @@ public class RandomQueueSelector extends RandomSelector {
 
 	@Override
 	public Destination getRandomDestination() {
-		final int index = rand.nextInt(MAX_QUEUES);
-		return queues.get(index);
+		return queues.get(getRandomIndex());
 	}
 
 	@Override

@@ -10,13 +10,11 @@ import com.solacesystems.jcsmp.Topic;
 import ch.sbb.solace.demo.parallel.base.RandomSelector;
 
 public class RandomTopicSelector extends RandomSelector {
-	private static final int MAX_TOPICS = 100;
+	private final List<Destination> topics = new ArrayList<>(100);
 
-	private final List<Destination> topics = new ArrayList<>(MAX_TOPICS);
-
-	public RandomTopicSelector() {
-		super();
-		for (int i = 0; i < MAX_TOPICS; i++) {
+	public RandomTopicSelector(final int minQueue, final int maxQueue) {
+		super(minQueue, maxQueue);
+		for (int i = minQueue; i <= maxQueue; i++) {
 			final Topic topic = JCSMPFactory.onlyInstance().createTopic("topic/parallel/" + i);
 			topics.add(topic);
 		}
@@ -24,8 +22,7 @@ public class RandomTopicSelector extends RandomSelector {
 
 	@Override
 	public Destination getRandomDestination() {
-		final int index = rand.nextInt(MAX_TOPICS);
-		return topics.get(index);
+		return topics.get(getRandomIndex());
 	}
 
 	@Override

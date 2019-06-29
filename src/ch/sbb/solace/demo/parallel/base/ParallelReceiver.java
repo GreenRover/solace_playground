@@ -26,7 +26,7 @@ public abstract class ParallelReceiver {
 
 	protected AtomicInteger messageCountPerSecond = new AtomicInteger(0);
 	protected AtomicInteger messageCount = new AtomicInteger(0);
-	protected int MAX_MESSAGES = MessageConstants.MAX_PARALLEL_THREADS * MessageConstants.SENDING_COUNT;
+	protected int MAX_MESSAGES = MessageConstants.PARALLEL_THREADS * MessageConstants.SENDING_COUNT;
 
 	// statistics about priorities of received messages
 	protected Map<Integer, Integer> map = new ConcurrentHashMap<>();

@@ -34,9 +34,26 @@ import ch.sbb.solace.demo.helper.MessagePayloadHelper;
 import ch.sbb.solace.demo.parallel.base.ParallelSender;
 import ch.sbb.solace.demo.parallel.base.RandomSelector;
 
+/**
+ * Options:
+ *              
+ * -Dhost         Auth credentials
+ * -Dvpn
+ * -Duser
+ * -Dpassword
+ * 
+ * -Dcount=10_000  Number of msg to send  0==MaxInt
+ * -Dthreads=12	   Number of threads to use to send
+ * -DminQueue=1    Queue to send data to
+ * -DmaxQueue=50   Queue to send data to
+ * -DmsgSize=0     The size of the msg to send in byte. 0 means random changing between 10b - 2000b
+ */
 public class ParallelQueueProducer extends ParallelSender {
 
-	private static final RandomSelector rand = new RandomQueueSelector();
+	private static final RandomSelector rand = new RandomQueueSelector( //
+			Integer.parseInt(System.getProperty("minQueue", "1")), //
+			Integer.parseInt(System.getProperty("maxQueue", "50")) //
+	);
 
 	public ParallelQueueProducer() {
 		super("ParallelQueueProducer", rand);

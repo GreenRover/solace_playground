@@ -51,7 +51,7 @@ import ch.sbb.solace.demo.helper.SolaceHelper;
 public class TimeoutReplier {
 
 	private static Random rand = new Random();
-	private static ExecutorService executor = Executors.newFixedThreadPool(MessageConstants.MAX_PARALLEL_THREADS);
+	private static ExecutorService executor = Executors.newFixedThreadPool(MessageConstants.PARALLEL_THREADS);
 
 	public static void main(final String... args) throws JCSMPException {
 		SolaceHelper.setupLogging(Level.WARNING);

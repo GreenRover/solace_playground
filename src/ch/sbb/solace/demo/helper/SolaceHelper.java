@@ -58,6 +58,15 @@ public class SolaceHelper {
 		
 		if (System.getProperty("count") != null) {
 			MessageConstants.SENDING_COUNT = Integer.parseInt(System.getProperty("count"));
+			if (MessageConstants.SENDING_COUNT < 1) {
+				MessageConstants.SENDING_COUNT = Integer.MAX_VALUE;
+			}
+			
+			System.out.println(MessageConstants.SENDING_COUNT);
+		}
+		
+		if (System.getProperty("threads") != null) {
+			MessageConstants.PARALLEL_THREADS = Integer.parseInt(System.getProperty("threads"));
 		}
 		
 		System.out.println(String.format("host:%s, user:%s, vpn:%s", host, user, vpn));
@@ -70,8 +79,6 @@ public class SolaceHelper {
 		properties.setProperty(JCSMPProperties.REAPPLY_SUBSCRIPTIONS, true);
 		properties.setProperty(JCSMPProperties.SUB_ACK_WINDOW_SIZE, 255); // Default: 255
 		properties.setProperty(JCSMPProperties.PUB_ACK_WINDOW_SIZE, 255); // Default:   1 for Java else 255
-
-		properties.setProperty(JCSMPProperties.PUB_ACK_WINDOW_SIZE, 255); // extends ACK Window		
 		
 		JCSMPChannelProperties channelProperties = (JCSMPChannelProperties) properties
 				.getProperty(JCSMPProperties.CLIENT_CHANNEL_PROPERTIES);

@@ -12,9 +12,25 @@ import com.solacesystems.jcsmp.XMLMessageListener;
 import ch.sbb.solace.demo.parallel.base.ParallelReceiver;
 import ch.sbb.solace.demo.parallel.base.RandomSelector;
 
+/**
+ * Options:
+ *              
+ * -Dhost         Auth credentials
+ * -Dvpn
+ * -Duser
+ * -Dpassword
+ * 
+ * -Dcount=10_000  Number of msg to send  0==MaxInt
+ * -DminQueue=1    Queue to listen data on
+ * -DmaxQueue=50   Queue to listen data on
+ * -DmsgSize=0     The size of the msg to send in byte. 0 means random changing between 10b - 2000b
+ */
 public class ParallelTopicSubscriber extends ParallelReceiver {
 
-	private static final RandomSelector rand = new RandomTopicSelector();
+	private static final RandomSelector rand = new RandomTopicSelector( //
+			Integer.parseInt(System.getProperty("minQueue", "1")), //
+			Integer.parseInt(System.getProperty("maxQueue", "50")) //
+	);
 
 	public ParallelTopicSubscriber() {
 		super("ParallelTopicSubscriber", rand);

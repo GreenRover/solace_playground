@@ -39,15 +39,15 @@ public abstract class ParallelSender {
 		final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		executorService.scheduleAtFixedRate(() -> {
 			final int count = messageCount.getAndSet(0);
-			System.out.printf("%d msg/s%n", count);
+			System.out.printf("%,d msg/s%n", count);
 		}, 0, 1, TimeUnit.SECONDS);
 
 		runInParallel(properties);
 	}
 
 	private  void runInParallel(final JCSMPProperties properties) throws JCSMPException {
-		final ExecutorService executor = Executors.newFixedThreadPool(MessageConstants.MAX_PARALLEL_THREADS);
-		for (int i = 0; i < MessageConstants.MAX_PARALLEL_THREADS; i++) {
+		final ExecutorService executor = Executors.newFixedThreadPool(MessageConstants.PARALLEL_THREADS);
+		for (int i = 0; i < MessageConstants.PARALLEL_THREADS; i++) {
 			executor.submit(run(properties));
 		}
 		executor.shutdown();
@@ -65,7 +65,7 @@ public abstract class ParallelSender {
 
 					for (int i = 1; i <= MessageConstants.SENDING_COUNT; i++) {
 						final Destination queue = rand.getRandomDestination();
-						final String text = rand.getRandomMessage();
+						final String text = rand.createMessage(Integer.parseInt(System.getProperty("msgSize", "0")));
 						final TextMessage msg = createMessage(text, i, queue.getName());
 						msg.setPriority(i % 10);
 						prod.send(msg, queue);
@@ -74,6 +74,7 @@ public abstract class ParallelSender {
 					session.closeSession();
 				} catch (final Exception e) {
 					System.out.println(e);
+					e.printStackTrace();
 				}
 			}
 		};
