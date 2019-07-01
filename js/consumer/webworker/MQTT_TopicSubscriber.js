@@ -75,7 +75,8 @@ var TopicSubscriber = function (queueName) {
         consumer.log('Connecting to Solace message router using url: ' + host);
         consumer.log('Client username: ' + username);
         consumer.log('Solace message router VPN name: ' + vpn);
-        // create session
+        
+        // create session        
         try {
             consumer.session = new Paho.MQTT.Client(host, Number(port), '/' + vpn, "clientId");
 
@@ -86,8 +87,6 @@ var TopicSubscriber = function (queueName) {
             };
             consumer.session.onMessageArrived = (message) => {
                 consumer.log('Received message: ' + message.payloadString.substr(37, 10));
-                // console.log(message);
-                // consumer.log('Received message: "' + message.payloadString + '"');
             };
 
             console.log('connecting as: ' + username + ', passwd: ' + pass);
@@ -140,21 +139,6 @@ var TopicSubscriber = function (queueName) {
     return consumer;
 };
 
-/*
-// Initialize factory with the most recent API defaults
-var factoryProps = new solace.SolclientFactoryProperties();
-factoryProps.profile = solace.SolclientFactoryProfiles.version10;
-solace.SolclientFactory.init(factoryProps);
-
-// enable logging to JavaScript console at WARN level
-// NOTICE: works only with "solclientjs-debug.js"
-solace.SolclientFactory.setLogLevel(solace.LogLevel.WARN);
-*/
-
-// create the consumer, specifying name of the queue
 let QUEUE = "demo";
 subscriber = new TopicSubscriber(QUEUE);
 subscriber.start();
-
-
-console.log("ölkjölköladsfölkjkljölkjölkjdöfslkjö")
