@@ -1,5 +1,6 @@
 package ch.sbb.solace.demo.parallel.base;
 
+import java.lang.reflect.Constructor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,7 +21,7 @@ import ch.sbb.solace.demo.helper.SolaceHelper;
 
 public abstract class ParallelSender {
 
-	private final AtomicInteger messageCount = new AtomicInteger();
+	public static final AtomicInteger messageCount = new AtomicInteger();
 	private final RandomSelector rand;
 	private final String name;
 
@@ -28,13 +29,13 @@ public abstract class ParallelSender {
 		this.name = name;
 		this.rand = rand;
 	}
-	
+
 	public void go() throws JCSMPException, InterruptedException {
 		SolaceHelper.setupLogging(Level.WARNING);
 		System.out.printf("%s initializing...%n", name);
 
 		final JCSMPProperties properties = SolaceHelper.setupProperties();
-		
+
 		// monitor sending statistics
 		final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 		executorService.scheduleAtFixedRate(() -> {
@@ -45,7 +46,7 @@ public abstract class ParallelSender {
 		runInParallel(properties);
 	}
 
-	private  void runInParallel(final JCSMPProperties properties) throws JCSMPException {
+	private void runInParallel(final JCSMPProperties properties) throws JCSMPException {
 		final ExecutorService executor = Executors.newFixedThreadPool(MessageConstants.PARALLEL_THREADS);
 		for (int i = 0; i < MessageConstants.PARALLEL_THREADS; i++) {
 			executor.submit(run(properties));
@@ -53,25 +54,16 @@ public abstract class ParallelSender {
 		executor.shutdown();
 	}
 
-	private  Runnable run(final JCSMPProperties properties) {
+	@SuppressWarnings("unchecked")
+	private <I extends ParallelSender> Runnable run(final JCSMPProperties properties) {
+		Class<? extends ParallelSender> clazz = this.getClass();
 		return new Runnable() {
 			@Override
 			public void run() {
 				try {
-					final JCSMPSession session = JCSMPFactory.onlyInstance().createSession(properties);
-					session.connect();
-					configureSession(session);
-					final XMLMessageProducer prod = createProducer(session);
-
-					for (int i = 1; i <= MessageConstants.SENDING_COUNT; i++) {
-						final Destination queue = rand.getRandomDestination();
-						final String text = rand.createMessage(Integer.parseInt(System.getProperty("msgSize", "0")));
-						final TextMessage msg = createMessage(text, i, queue.getName());
-						msg.setPriority(i % 10);
-						prod.send(msg, queue);
-						messageCount.incrementAndGet();
-					}
-					session.closeSession();
+					final Constructor<?> ctor = clazz.getConstructor();
+					final I instance = (I) ctor.newInstance(new Object[] {});
+					instance.runInThread(properties);
 				} catch (final Exception e) {
 					System.out.println(e);
 					e.printStackTrace();
@@ -80,9 +72,26 @@ public abstract class ParallelSender {
 		};
 	}
 
+	public void runInThread(final JCSMPProperties properties) throws JCSMPException {
+		final JCSMPSession session = JCSMPFactory.onlyInstance().createSession(properties);
+		session.connect();
+		configureSession(session);
+		final XMLMessageProducer prod = createProducer(session);
+
+		for (int i = 1; i <= MessageConstants.SENDING_COUNT; i++) {
+			final Destination queue = rand.getRandomDestination();
+			final String text = rand.createMessage(Integer.parseInt(System.getProperty("msgSize", "0")));
+			final TextMessage msg = createMessage(text, i, queue.getName());
+			msg.setPriority(i % 10);
+			prod.send(msg, queue);
+			messageCount.incrementAndGet();
+		}
+		session.closeSession();
+	}
+
 	public abstract void configureSession(JCSMPSession session) throws JCSMPException;
 
-	public abstract  XMLMessageProducer createProducer(final JCSMPSession session) throws JCSMPException;
+	public abstract XMLMessageProducer createProducer(final JCSMPSession session) throws JCSMPException;
 
 	public abstract TextMessage createMessage(final String text, final int i, final String destinationName);
 }

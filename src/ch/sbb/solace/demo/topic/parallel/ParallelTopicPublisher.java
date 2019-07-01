@@ -2,6 +2,7 @@ package ch.sbb.solace.demo.topic.parallel;
 
 import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
+import com.solacesystems.jcsmp.JCSMPProperties;
 import com.solacesystems.jcsmp.JCSMPSession;
 import com.solacesystems.jcsmp.JCSMPStreamingPublishEventHandler;
 import com.solacesystems.jcsmp.TextMessage;
@@ -32,17 +33,25 @@ public class ParallelTopicPublisher extends ParallelSender {
 			Integer.parseInt(System.getProperty("minQueue", "1")), //
 			Integer.parseInt(System.getProperty("maxQueue", "50")) //
 	);
+	private TextMessage msg;
 
 	public ParallelTopicPublisher() {
 		super("ParallelTopicPublisher", rand);
-
-		// createMessage is expensive. And because topic dont have ack, we can re use
-		// it.
-//		msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
+	}
+	
+	@Override
+	public void runInThread(JCSMPProperties properties) throws JCSMPException {
+		/**
+		 * Create TextMessage for each tread, because<br>
+		 * - Creating TextMessage is expensive<br>
+		 * - The TextMessage is not thread save<br>
+		 */
+		msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
+		super.runInThread(properties);
 	}
 
 	@Override
-	public XMLMessageProducer createProducer(final JCSMPSession session) throws JCSMPException {
+	public XMLMessageProducer createProducer(final JCSMPSession session) throws JCSMPException {	
 		final XMLMessageProducer prod = session.getMessageProducer(new JCSMPStreamingPublishEventHandler() {
 			@Override
 			public void responseReceived(final String messageID) {
@@ -59,7 +68,6 @@ public class ParallelTopicPublisher extends ParallelSender {
 
 	@Override
 	public TextMessage createMessage(final String text, final int i, final String topicName) {
-		TextMessage msg = JCSMPFactory.onlyInstance().createMessage(TextMessage.class);
 		final String payload = MessagePayloadHelper.createPayload(text, i, topicName);
 		msg.setText(payload);
 		int prio = i % 10;
