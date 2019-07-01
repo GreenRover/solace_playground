@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+    
+      http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<!--
+    Solace Web Messaging API for JavaScript
+    Persistence with Queues tutorial - Queue Consumer
+    Demonstrates sending persistent messages to a queue
+-->
+
+<html lang="en">
+
+  <head>
+    <title>Solace Web Messaging API for JavaScript, Persistence with Queues tutorial - Queue Consumer</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;" />
+    <meta charset="utf-8"/>
+
+    <link rel="stylesheet" type="text/css" href="../../resources/css/pure.css"></link>
+    <link rel="stylesheet" type="text/css" href="../../resources/css/samples.css"></link>
+    
+
+    <!-- Execute the PublishSubscribe Topic Subscriber tutorial -->
+    <script>
+      var w;
+      function startWorker() {
+        if(typeof(Worker) !== "undefined") {
+          if(typeof(w) == "undefined") {
+            w = new Worker("MQTT_TopicSubscriber.js");            
+          }
+          w.onmessage = function(event) {
+            document.getElementById('log').innerHTML = event.data;
+          };
+        } else {
+          document.getElementById("log").innerHTML = "Sorry, your browser does not support Web Workers...";
+        }
+      }
+
+      function stopWorker() {
+        w.terminate();
+        w = undefined;
+        document.getElementById('log').innerHTML = 'WebWorker stopped'
+      }
+
+      window.onload = function () {
+        document.getElementById("start").addEventListener("click", startWorker);
+        document.getElementById("stop").addEventListener("click", stopWorker);
+      };
+    </script>
+	<style>
+        .warning {
+            padding: 5px; 
+            border: 1px solid black; 
+            background-color: #ff8;
+        }
+        .ie11 {
+            /* Hide instructions that only apply to IE11/Edge */
+            display: none; 
+        }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            .ie11 {
+                /* Show instructions in IE11. If you're trying this sample from the local filesystem,
+                   it's easy to miss the prompt at the bottom of the window. */
+                display: block !important;
+            }
+        }
+	</style>
+  </head>
+
+  <body>
+    <!-- used to prompt selection of client certificate -->
+    <iframe id="iframe" src="" hidden></iframe>
+
+    <div class="banner">
+      <div class="banner-interior">
+        <span class="logo">
+          <a href="http://dev.solace.com/">
+            <img src="../../resources/images/solace-logo-white.png"/>
+          </a>
+        </span>
+        <div class="banner-heading">
+          Solace Web Messaging API for JavaScript
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-body">
+      <h2>Subcribning Topic msgsize/direct/json/myclass/1.0 with paho-mqtt.js</h2>
+      <h3>Topic Consumer</h3>
+      <!--[if IE]>
+          <div class="ie9 warning" style="padding: 5px; border: 1px solid black; background-color: #ff8;">
+              IE9 only: If you are running this sample from the local filesystem, click the "Allow blocked content" button
+              in the popup below to enable JavaScript.
+          </div>
+      <![endif]-->
+      <div class="ie11 warning">
+          IE 11 only: If you are running this sample from the local filesystem, click the "Allow blocked content" button
+          in the popup below to enable JavaScript.
+      </div>
+
+      <form class="pure-form pure-form-aligned">
+        <p>
+          <button type="button" class="pure-button pure-button-primary" id="start">Start</button>
+          <button type="button" class="pure-button button-error" id="stop">Stop</button>
+        </p>
+        
+        <textarea id="log" rows="20" cols="120" autofocus></textarea>
+      </form>
+
+    </div>
+  </body>
+  
+</html>
