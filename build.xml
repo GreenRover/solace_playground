@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="solace" name="Create Runnable Jar for Project solace">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="${dir.buildfile}/.."/>
+    <property name="dir.jarfile" value="C:/devsbb/tmp"/>
+    <target name="build">
+        <jar destfile="${dir.jarfile}/solace.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="ch.sbb.solace.demo.topic.parallel.ParallelTopicPublisher"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.buildfile}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/sol-jcsmp-10.6.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-lang-2.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/commons-logging-1.1.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/org.apache.servicemix.bundles.jzlib-1.0.7_2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/org.osgi.annotation-6.0.0.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${dir.buildfile}/lib/sol-common-10.6.0.jar"/>
+        </jar>
+    </target>
+    <target name="deploy">
+        <scp file="${dir.jarfile}/solace.jar" todir="cloud-user@shared-rcsactivemq-node01.otc-test.sbb.ch:/tmp" keyfile="H:/.ssh/id_rcs-operator" trust="true" />
+        <scp file="${dir.jarfile}/solace.jar" todir="cloud-user@shared-rcsactivemq-node02.otc-test.sbb.ch:/tmp" keyfile="H:/.ssh/id_rcs-operator" trust="true" />
+        <scp file="${dir.jarfile}/solace.jar" todir="rcs@rcsmsg01:/tmp" keyfile="H:/.ssh/id_rcs-operator" trust="true" />
+        <scp file="${dir.jarfile}/solace.jar" todir="docker@k54129:/tmp" keyfile="H:/.ssh/id_rcs-operator" trust="true" />
+    </target>
+</project>
