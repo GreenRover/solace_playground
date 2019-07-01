@@ -43,6 +43,7 @@ import ch.sbb.solace.demo.parallel.base.RandomSelector;
  * -Dpassword
  * 
  * -Dcount=10_000  Number of msg to send  0==MaxInt
+ * -Dthreads=12	   Number of threads used to receive. Each thread will handle a subset of destinations / queues
  * -DminQueue=1    Queue to listen data on
  * -DmaxQueue=50   Queue to listen data on
  * -DmsgSize=0     The size of the msg to send in byte. 0 means random changing between 10b - 2000b
