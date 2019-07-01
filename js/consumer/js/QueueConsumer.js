@@ -80,6 +80,7 @@ var QueueConsumer = function (queueName) {
                 vpnName:  vpn,
                 userName: username,
                 password: pass,
+                reapplySubscriptions: true,
             });
         } catch (error) {
             consumer.log(error.toString());

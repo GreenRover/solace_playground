@@ -79,6 +79,7 @@ var TopicSubscriber = function (topicName) {
                 vpnName: vpn,
                 userName: username,
                 password: pass,
+                reapplySubscriptions: true,
             });
         } catch (error) {
             subscriber.log(error.toString());

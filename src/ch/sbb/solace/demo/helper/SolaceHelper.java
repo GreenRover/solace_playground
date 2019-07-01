@@ -18,7 +18,7 @@ public class SolaceHelper {
 	public  static final String TOPIC_MYCLASS_1_0 = "msgsize/direct/json/myclass/1.0";
 	public  static final String TOPIC_MYCLASS_2_0 = "msgsize/direct/json/myclass/2.0";
 	public  static final String TOPIC_YOURCLASS_1_0 = "msgsize/direct/json/yourclass/1.0";
-	public  static final String TOPIC_DEMO = "demo";
+	public  static final String TOPIC_DEMO = "demo/r2d2";
 	public  static final String TOPIC_IPAD_CON = "ipad_connection_test";
 
 	public static final String TOPIC_PEQ_REP = "reqrep/direct/json/myclass/1.0";
