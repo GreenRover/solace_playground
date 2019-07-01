@@ -43,8 +43,12 @@
           if(typeof(w) == "undefined") {
             w = new Worker("MQTT_TopicSubscriber.js");            
           }
-          w.onmessage = function(event) {
-            document.getElementById('log').innerHTML = event.data;
+          w.onmessage = function(e) {
+            switch (e.data.type) {
+                case 'debug':
+                     document.getElementById('log').innerHTML = e.data.msg;
+            }
+           
           };
         } else {
           document.getElementById("log").innerHTML = "Sorry, your browser does not support Web Workers...";

@@ -1,9 +1,10 @@
+var PahoMQTT_global = {
+    'WebSocket': WebSocket,
+    'ArrayBuffer': ArrayBuffer
+};
+
 // Load Solace Web Messaging API for JavaScript
-importScripts("../../lib/paho-mqtt.js")
-
-// Load the Persistence with Queues - Queue Consumer 
-importScripts("MQTT_TopicSubscriber.js")
-
+importScripts("../../lib/paho-mqtt.patched.js")
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -45,11 +46,14 @@ var TopicSubscriber = function (queueName) {
     consumer.log = function (line) {
         var now = new Date();
         var time = [('0' + now.getHours()).slice(-2), ('0' + now.getMinutes()).slice(-2),
-            ('0' + now.getSeconds()).slice(-2)];
+        ('0' + now.getSeconds()).slice(-2)];
         var timestamp = '[' + time.join(':') + '] ';
-        let msg =  timestamp + line
+        let msg = timestamp + line
         console.log('ww |', msg);
-        postMessage(msg);
+        postMessage({
+            'type': 'debug',
+            'msg': msg
+        });
     };
 
     consumer.log('\n*** Consumer to queue "' + consumer.queueName + '" is ready to connect ***');
@@ -60,7 +64,7 @@ var TopicSubscriber = function (queueName) {
             consumer.log('Already connected and ready to consume messages.');
             return;
         }
-        
+
         let username = "default";
         let pass = "default";
         let vpn = "pingu-VPN";
@@ -132,7 +136,7 @@ var TopicSubscriber = function (queueName) {
     consumer.start = function () {
         subscriber.connect();
     }
-    
+
     return consumer;
 };
 
@@ -153,4 +157,4 @@ subscriber = new TopicSubscriber(QUEUE);
 subscriber.start();
 
 
-conssole.log("ölkjölköladsfölkjkljölkjölkjdöfslkjö")
+console.log("ölkjölköladsfölkjkljölkjölkjdöfslkjö")
