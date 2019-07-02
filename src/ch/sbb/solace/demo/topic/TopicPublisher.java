@@ -27,13 +27,13 @@ public class TopicPublisher {
 			queueName = System.getProperty("queueName");
 		}
 
-		MessageConstants.DataType msgSize = MessageConstants.DataType.K10_TextMessage;
+		int msgSize = 10_000;
 		if (System.getProperty("msgSize") != null) {
-			msgSize = MessageConstants.DataType.valueOf(System.getProperty("msgSize"));
+			msgSize = Integer.parseInt(System.getProperty("msgSize"));
 		}
 
 		System.out.println(
-				"sending: " + MessageConstants.SENDING_COUNT + "msgs, with " + msgSize.name() + " to " + queueName);
+				"sending: " + MessageConstants.SENDING_COUNT + "msgs, with " + msgSize + "b to " + queueName);
 
 		runWithNewSession(session, queueName, msgSize);
 		// runWithNewSession(properties, SolaceHelper.TOPIC_MYCLASS_2_0,
@@ -45,7 +45,7 @@ public class TopicPublisher {
 	}
 
 	private static void runWithNewSession(final JCSMPSession session, final String topicName,
-			final MessageConstants.DataType dataType) {
+			final int msgSize) {
 		try {
 			final Topic topic = JCSMPFactory.onlyInstance().createTopic(topicName);
 			final XMLMessageProducer prod = session.getMessageProducer(new JCSMPStreamingPublishEventHandler() {
@@ -63,7 +63,7 @@ public class TopicPublisher {
 			final int delay = Integer.parseInt(System.getProperty("delay"));
 
 			for (int i = 1; i <= MessageConstants.SENDING_COUNT; i++) {
-				final TextMessage msg = createMessage(dataType, i, topic.getName());
+				final TextMessage msg = createMessage(msgSize, i, topic.getName());
 //				msg.setDeliveryMode(DeliveryMode.PERSISTENT);
 //				msg.setTimeToLive(10 * 1000);
 				prod.send(msg, topic);
@@ -79,9 +79,9 @@ public class TopicPublisher {
 		}
 	}
 
-	private static TextMessage createMessage(final MessageConstants.DataType dataType, final int i,
+	private static TextMessage createMessage(final int msgSize, final int i,
 			final String topicName) {
-		final String payload = MessagePayloadHelper.createPayload(dataType, i, topicName);
+		final String payload = MessagePayloadHelper.createPayload(msgSize, i, topicName);
 		return createTextMessage(payload);
 	}
 

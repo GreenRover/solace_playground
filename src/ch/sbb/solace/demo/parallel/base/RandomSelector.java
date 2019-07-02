@@ -22,14 +22,14 @@ public abstract class RandomSelector {
 		this.minQueue = minQueue;
 		this.maxQueue = maxQueue;
 		
-		messages.add(MessageConstants.MESSAGE_B10);
-		messages.add(MessageConstants.MESSAGE_B20);
-		messages.add(MessageConstants.MESSAGE_B50);
-		messages.add(MessageConstants.MESSAGE_B100);
-		messages.add(MessageConstants.MESSAGE_B200);
-		messages.add(MessageConstants.MESSAGE_B500);
-		messages.add(MessageConstants.MESSAGE_K1);
-		messages.add(MessageConstants.MESSAGE_K2);
+		messages.add(MessageConstants.createStringOfSize(10));
+		messages.add(MessageConstants.createStringOfSize(20));
+		messages.add(MessageConstants.createStringOfSize(50));
+		messages.add(MessageConstants.createStringOfSize(100));
+		messages.add(MessageConstants.createStringOfSize(200));
+		messages.add(MessageConstants.createStringOfSize(500));
+		messages.add(MessageConstants.createStringOfSize(1000));
+		messages.add(MessageConstants.createStringOfSize(2000));
 	}
 
 	public abstract Destination getRandomDestination();

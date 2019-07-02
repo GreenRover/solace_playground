@@ -50,26 +50,11 @@ public class MessagePayloadHelper {
 		return String.format(" [%d of %d] ", count, MessageConstants.SENDING_COUNT);
 	}
 
-	public static String createPayload(final MessageConstants.DataType dataType, final int i, final String info) {
+	public static String createPayload(final int payloadSize, final int i, final String info) {
 		final StringBuilder sb = new StringBuilder();
 		sb.append(System.currentTimeMillis() + ";");
 		sb.append(info).append(" | ");
-		switch (dataType) {
-		case K1_TextMessage:
-			sb.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K1));
-			break;
-		case K10_TextMessage:
-			sb.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K10));
-			break;
-		case K100_TextMessage:
-			sb.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K100));
-			break;
-		case K1000_TextMessage:
-			sb.append(String.format("%d %s!", i, MessageConstants.MESSAGE_K1000));
-			break;
-		default:
-			throw new RuntimeException("Unexpected DataType");
-		}
+		sb.append(String.format("%d %s!", i, MessageConstants.createStringOfSize(payloadSize)));
 		return sb.toString();
 	}
 
