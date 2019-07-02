@@ -3,7 +3,6 @@ package ch.sbb.solace.demo.topic;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import com.solacesystems.jcsmp.DeliveryMode;
 import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
 import com.solacesystems.jcsmp.JCSMPSession;
@@ -60,14 +59,19 @@ public class TopicPublisher {
 					System.out.printf("Producer received error for msg: %s@%s - %s%n", messageID, timestamp, e);
 				}
 			});
+			
+			final int delay = Integer.parseInt(System.getProperty("delay"));
 
 			for (int i = 1; i <= MessageConstants.SENDING_COUNT; i++) {
 				final TextMessage msg = createMessage(dataType, i, topic.getName());
 //				msg.setDeliveryMode(DeliveryMode.PERSISTENT);
 //				msg.setTimeToLive(10 * 1000);
 				prod.send(msg, topic);
-				Thread.sleep(100);
 				System.out.println(calcCountInfo(i) + "MessageId-" + i + " sent");
+				
+				if (delay > 0) {
+					Thread.sleep(delay);
+				}
 			}
 			session.closeSession();
 		} catch (final Exception e) {
